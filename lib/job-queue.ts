@@ -1,6 +1,7 @@
 import { validateUrl, sanitizeScreenshotParams } from "./security"
 import { cacheManager } from "./cache-manager"
 import puppeteer from "puppeteer"
+import chromium from "@sparticuz/chromium"
 
 export interface ScreenshotJob {
   id: string
@@ -179,22 +180,35 @@ class JobQueue {
   }
 
   private async captureScreenshot(params: ScreenshotJob["params"]): Promise<Buffer> {
+    // Configure for serverless environment (Vercel) vs local development
+    const isProduction = process.env.NODE_ENV === 'production'
+    
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--no-first-run",
-        "--no-zygote",
-        "--disable-web-security",
-        "--disable-features=VizDisplayCompositor",
-        "--disable-background-timer-throttling",
-        "--disable-backgrounding-occluded-windows",
-        "--disable-renderer-backgrounding",
-      ],
+      executablePath: isProduction 
+        ? await chromium.executablePath() 
+        : process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      args: isProduction 
+        ? chromium.args.concat([
+            "--disable-web-security",
+            "--disable-features=VizDisplayCompositor",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+          ])
+        : [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
+            "--no-first-run",
+            "--no-zygote",
+            "--disable-web-security",
+            "--disable-features=VizDisplayCompositor",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+          ],
     })
 
     try {

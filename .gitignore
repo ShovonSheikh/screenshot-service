@@ -25,3 +25,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# custom exclusions
+heroui_comp/
+.vercelignore
+package.json
+pnpm-lock.yaml
+vercel.json
+layout.tsx
+route.ts

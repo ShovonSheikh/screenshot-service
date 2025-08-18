@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import puppeteer from "puppeteer"
+import chromium from "@sparticuz/chromium"
 import { rateLimiter } from "@/lib/rate-limiter"
 import { validateUrl, sanitizeScreenshotParams, getSecurityHeaders } from "@/lib/security"
 import { cacheManager } from "@/lib/cache-manager"
@@ -26,22 +27,35 @@ function parseScreenshotParams(searchParams: URLSearchParams): ScreenshotParams 
 }
 
 async function captureScreenshot(params: ReturnType<typeof sanitizeScreenshotParams>): Promise<Buffer> {
+  // Configure for serverless environment (Vercel) vs local development
+  const isProduction = process.env.NODE_ENV === 'production'
+  
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--no-first-run",
-      "--no-zygote",
-      "--disable-web-security",
-      "--disable-features=VizDisplayCompositor",
-      "--disable-background-timer-throttling",
-      "--disable-backgrounding-occluded-windows",
-      "--disable-renderer-backgrounding",
-    ],
+    executablePath: isProduction 
+      ? await chromium.executablePath() 
+      : process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    args: isProduction 
+      ? chromium.args.concat([
+          "--disable-web-security",
+          "--disable-features=VizDisplayCompositor",
+          "--disable-background-timer-throttling",
+          "--disable-backgrounding-occluded-windows",
+          "--disable-renderer-backgrounding",
+        ])
+      : [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+          "--no-first-run",
+          "--no-zygote",
+          "--disable-web-security",
+          "--disable-features=VizDisplayCompositor",
+          "--disable-background-timer-throttling",
+          "--disable-backgrounding-occluded-windows",
+          "--disable-renderer-backgrounding",
+        ],
   })
 
   try {

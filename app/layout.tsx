@@ -9,9 +9,9 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'link2image',
+  description: 'The best way to capture images from links',
+  generator: 'Self-built',
 }
 
 export default function RootLayout({
