@@ -797,63 +797,47 @@ if (data.success) {
               Choose the plan that fits your needs. No hidden fees.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 name: 'Free',
                 price: '$0',
-                period: 'forever',
+                period: '/month',
                 features: [
-                  '1,000 screenshots/month',
+                  '30 screenshots/month',
+                  'PNG and JPEG support',
                   'Basic support',
-                  'Standard quality',
-                  'API access'
+                  'Max resolution 720p'
                 ],
                 buttonText: 'Get Started',
                 popular: false
               },
               {
                 name: 'Starter',
-                price: '$19.99',
-                period: 'per month',
+                price: '$9.99',
+                period: '/month',
                 features: [
-                  '10,000 screenshots/month',
-                  'Priority support',
-                  'HD quality',
-                  'Custom dimensions',
-                  'Webhook support'
+                  '150 screenshots/month',
+                  'PNG, JPG, JPEG, WebP support',
+                  'Custom Dimensions',
+                  'Max resolution 1080p'
                 ],
                 buttonText: 'Start Free Trial',
                 popular: true
               },
               {
                 name: 'Growth',
-                price: '$49.99',
-                period: 'per month',
+                price: '$24.99',
+                period: '/month',
                 features: [
-                  '25,000 screenshots/month',
-                  '24/7 support',
-                  '4K quality',
-                  'Batch processing',
-                  'Advanced analytics',
-                  'Custom integrations'
+                  '300 screenshots/month',
+                  'PNG, JPG, JPEG, WebP, AVIF, BMP support',
+                  'API Access (via API Key)',
+                  'Priority Support',
+                  'Batch Processing',
+                  'Max resolution 4K'
                 ],
                 buttonText: 'Start Free Trial',
-                popular: false
-              },
-              {
-                name: 'Enterprise',
-                price: '$199.99',
-                period: 'per month',
-                features: [
-                  'Unlimited screenshots',
-                  'Dedicated support',
-                  'Ultra HD quality',
-                  'White-label solution',
-                  'SLA guarantee',
-                  'Custom deployment'
-                ],
-                buttonText: 'Contact Sales',
                 popular: false
               }
             ].map((plan, index) => (
